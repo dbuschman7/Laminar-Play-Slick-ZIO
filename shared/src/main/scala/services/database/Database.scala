@@ -43,7 +43,7 @@ object Database {
       * @return true if the user exists and it is the current password, a failed effect
       * with a [[WrongLoginInfo]] otherwise. (Could also fail with a database exception)
       */
-    def correctLogin(userName: String, password: String) =
+    def correctLogin(userName: String, password: String): ZIO[Crypto, Throwable, Boolean] =
       for {
         maybeUser <- findUser(userName)
         user <- maybeUser match {

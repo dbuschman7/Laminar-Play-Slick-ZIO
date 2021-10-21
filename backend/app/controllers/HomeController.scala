@@ -1,23 +1,16 @@
 package controllers
 
-import javax.inject._
-
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import play.api.mvc._
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import models.LoginData
-import slick.jdbc.JdbcProfile
-import play.api.db.slick.HasDatabaseConfigProvider
-import play.api.db.slick.DatabaseConfigProvider
-import services.crypto.Crypto
+import programs.backend.Actions
 import services.crypto.BCrypto
 import services.database.BDatabase
-import zio.ZLayer
-import zio.UIO
 import slick.jdbc.H2Profile
-import programs.backend.Actions
-import play.api.libs.json.JsPath.json
+import zio.ZLayer
+
+import javax.inject._
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class HomeController @Inject()(
@@ -33,11 +26,11 @@ class HomeController @Inject()(
     */
   val layer = BCrypto.live ++ (ZLayer.succeed(db) >>> BDatabase.live) ++ zio.clock.Clock.live
 
-  def appSummary = Action {
+  def appSummary: Action[AnyContent] = Action {
     Ok(Json.obj("content" -> "Scala Play Angular Seed"))
   }
 
-  def postTest = Action {
+  def postTest: Action[AnyContent] = Action {
     Ok(Json.obj("content" -> "Post Request Test => Data Sending Success"))
   }
 

@@ -1,14 +1,13 @@
 package programs.backend
 
-import io.circe
-import io.circe.parser.decode
 import io.circe.generic.auto._
+import io.circe.parser.decode
 import models.LoginData
-import zio.{UIO, ZIO}
-import zio.duration.Duration
 import services.crypto._
 import services.database._
 import zio.clock.Clock
+import zio.duration.Duration
+import zio.{UIO, ZIO}
 
 import scala.concurrent.duration._
 

@@ -1,6 +1,5 @@
 package programs
 
-import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder}
@@ -8,14 +7,12 @@ import models.LoginData
 import programs.backend.Actions
 import programs.frontend.FormSubmit
 import services.crypto.{Crypto, HashedPassword}
+import services.database.Database
 import services.httpclient.HttpClient
 import urldsl.language.PathSegment
 import zio._
 import zio.test.Assertion._
-import zio.test.{DefaultRunnableSpec, _}
-import services.database.Database
 import zio.test._
-import zio.test.environment._
 
 import scala.collection.mutable
 
@@ -60,8 +57,8 @@ object LoginRouteSpecs extends DefaultRunnableSpec {
             bodyAsStr <- UIO(encoder(body).noSpaces)
             response <- Actions.handleLogin(bodyAsStr).provideLayer(zio.clock.Clock.live ++ crytoMockup ++ dbMockup)
             .flatMap {
-              case Some(message) => ZIO.fail(new HttpClient.RequestFailed(message))
-              case None => UIO("Logged in!")
+              case Some(message) => Task.fail(new HttpClient.RequestFailed(message))
+              case None => Task.succeed("Logged in!")
             }
             responseAsStr <- UIO(response.asJson.noSpaces)
             decodedResponse <- ZIO.fromEither(decode[R](responseAsStr))

@@ -24,7 +24,7 @@ object FHttpClient {
     ZLayer.succeed(new HttpClient.Service {
       private def send[R](method: String, path: PathSegment[Unit, _], body: Option[String])(
           implicit decoder: Decoder[R]
-      ) =
+      ): Task[R] =
         for {
           request <- UIO(new XMLHttpRequest)
           responseTextFiber <- ZIO

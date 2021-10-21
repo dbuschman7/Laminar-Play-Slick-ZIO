@@ -2,7 +2,7 @@ package services.httpclient
 
 import io.circe.{Decoder, Encoder}
 import urldsl.language.PathSegment
-import zio.{Task, ZIO}
+import zio.Task
 
 object HttpClient {
 

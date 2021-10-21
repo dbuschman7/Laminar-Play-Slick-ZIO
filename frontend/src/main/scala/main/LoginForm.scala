@@ -3,11 +3,8 @@ package main
 import com.raquo.laminar.api.L._
 import models.LoginData
 import programs.frontend.FormSubmit
-import zio.ZLayer
-import zio.ZIO
-import services.httpclient.FHttpClient
-import services.httpclient.HttpClient
-import zio.Task
+import services.httpclient.{FHttpClient, HttpClient}
+import zio.{Task, ZLayer}
 
 object LoginForm {
 
@@ -34,7 +31,7 @@ object LoginForm {
     def passwordChanger(newPassword: String): LoginData => LoginData = _.copy(password = newPassword)
     val passwordObserver                                             = changerBus.writer.contramap(passwordChanger)
 
-    val $loginData = changerBus.events.fold(LoginData("", "")) { (currentLoginData, nextChanger) =>
+    val $loginData = changerBus.events.foldLeft(initial = LoginData("", "")) { (currentLoginData, nextChanger) =>
       nextChanger(currentLoginData)
     }
 
